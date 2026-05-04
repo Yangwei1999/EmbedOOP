@@ -102,6 +102,9 @@ void led_off(led_base *led) {
 	return;
 }
 
+led_base *g_led_error = NULL;
+led_base *g_led_alram = NULL;
+
 /* USER CODE END 0 */
 
 /**
@@ -144,13 +147,20 @@ int main(void)
 	// HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 
 
-	led_gpio_t led_red,led_green = { 0 };
-	led_pwm_t led_pwm,led_pwm2;
+	led_gpio_t led_green = { 0 };
+	led_pwm_t led_pwm2;
+
+	g_led_alram = &led_green.base;
+	g_led_error = &led_pwm2.base;
+
 
 	// led_gpio_init(&led_red, "led_red", LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
 	led_gpio_init(&led_green, "led_green", LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
 	// led_pwm_init(&led_pwm, "led_pwm", &htim2, TIM_CHANNEL_2, 50);
 	led_pwm_init(&led_pwm2, "led_pwm2", &htim4, TIM_CHANNEL_1, 10);
+
+	led_gpio_t *test = __containerof(g_led_alram, led_gpio_t, base);
+	printf(" gpio is %u \r\n", test->pin_num);
 
 	// led_t led_red,led_green;
 	// led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);
@@ -176,15 +186,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  	led_on(&led_green);
+  	led_on(g_led_alram);
 	// led_gpio_on(&led_green);
   	// led_gpio_off(&led_red);
   	// led_pwm_set(&led_pwm2, 0);
-  	led_on(&led_pwm2);
+  	led_on(g_led_error);
     HAL_Delay(1000);
-  	led_off(&led_green);
+  	led_off(g_led_alram);
   	// led_off(&led_pwm2);
-	led_gpio_off(&led_green);
+	led_off(g_led_error);
   	// led_gpio_on(&led_red);
   	// led_pwm_set(&led_pwm2, 100);
     HAL_Delay(1000);
