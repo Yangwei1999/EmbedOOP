@@ -65,14 +65,15 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-extern led_ops gpio_ops;
-extern led_ops pwm_ops;
+// extern led_ops gpio_ops;
+// extern led_ops pwm_ops;
 
 /*Configure GPIO pin Output Level */
 // HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
 
 
-void led_on(led_base *led, led_ops *ops) {
+void led_on(led_base *led) {
+	led_ops *ops = led->ops;
 	if (ops->on != NULL) {
 		ops->on(led);
 		return;
@@ -86,7 +87,8 @@ void led_on(led_base *led, led_ops *ops) {
 	return;
 }
 
-void led_off(led_base *led, led_ops *ops) {
+void led_off(led_base *led) {
+	led_ops *ops = led->ops;
 	if (ops->off != NULL) {
 		ops->off(led);
 		return;
@@ -174,15 +176,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  	led_on(&led_green, &gpio_ops);
+  	led_on(&led_green);
 	// led_gpio_on(&led_green);
   	// led_gpio_off(&led_red);
   	// led_pwm_set(&led_pwm2, 0);
-  	led_on(&led_pwm2, &pwm_ops);
+  	led_on(&led_pwm2);
     HAL_Delay(1000);
-  	led_off(&led_green, &gpio_ops);
-  	led_off(&led_pwm2, &pwm_ops);
-	// led_gpio_off(&led_green);
+  	led_off(&led_green);
+  	// led_off(&led_pwm2);
+	led_gpio_off(&led_green);
   	// led_gpio_on(&led_red);
   	// led_pwm_set(&led_pwm2, 100);
     HAL_Delay(1000);

@@ -7,7 +7,7 @@
 #include "tim.h"
 
 
-led_ops pwm_ops = {
+static led_ops pwm_ops = {
 	.on = NULL,
 	.off = NULL,
 	.set_brightness = led_pwm_set,
@@ -17,6 +17,7 @@ void led_pwm_init(led_pwm_t *led_pwm, char *name, TIM_HandleTypeDef *htim, uint3
 	led_base_init(&(led_pwm->base), name, 0);
 	led_pwm->channel = channel;
 	led_pwm->htim = htim;
+	led_pwm->base.ops = &pwm_ops;
 
 	led_pwm_set(led_pwm, brightness);
 

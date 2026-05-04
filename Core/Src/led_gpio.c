@@ -6,7 +6,7 @@
 
 #include "led_base_general.h"
 
-led_ops gpio_ops = {
+static led_ops gpio_ops = {
 	.on = led_gpio_on,
 	.off = led_gpio_off,
 	.set_brightness = NULL,
@@ -19,6 +19,8 @@ void led_gpio_init(led_gpio_t *led_gpio, char *name,GPIO_TypeDef *port, uint32_t
 	led_gpio->port_addr = port;
 	led_gpio->pin_num = pin_num;
 	led_gpio->on_state = on_state;
+
+	led_gpio->base.ops = &gpio_ops;
 }
 
 void led_gpio_deinit(led_gpio_t *led_gpio) {
