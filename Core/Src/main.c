@@ -85,6 +85,20 @@ static void led_green_off(void) {
   HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
 }
 
+typedef struct {
+    GPIO_TypeDef * port_addr;
+    uint32_t pin_num;
+    uint8_t on_state;
+} led_t;
+
+static void led_on(led_t *led) {
+	HAL_GPIO_WritePin(led->port_addr, led->pin_num, led->on_state);
+}
+
+static void led_off(led_t *led) {
+	HAL_GPIO_WritePin((GPIO_TypeDef *)led->port_addr, led->pin_num, 1 - led->on_state);
+}
+
 
 /* USER CODE END 0 */
 
@@ -121,6 +135,17 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+	led_t led_red = {
+		.port_addr = LED_RED_GPIO_Port,
+		.pin_num = LED_RED_Pin,
+		.on_state = GPIO_PIN_RESET
+	};
+	led_t led_green = {
+		.port_addr = LED_GREEN_GPIO_Port,
+		.pin_num = LED_GREEN_Pin,
+		.on_state = GPIO_PIN_RESET
+	};
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -131,11 +156,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    led_green_off();
-    led_red_on();
+	led_on(&led_green);
+  	led_off(&led_red);
     HAL_Delay(1000);
-    led_green_on();
-    led_red_off();
+	led_off(&led_green);
+  	led_on(&led_red);
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */
