@@ -6,7 +6,7 @@
 #define AGENTAI_LED_GPIO_H
 
 #include "led_base.h"
-
+#include "led_base_general.h"
 
 typedef struct {
 	led_base base;

@@ -37,7 +37,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/Src/led_base.c
         Core/Src/led_gpio.c
         Core/Src/led_pwm.c
-        Core/Inc/led_pwm.h)
+        Core/Inc/led_pwm.h
+        Core/Src/led_base_general.c
+        Core/Inc/led_base_general.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

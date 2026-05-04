@@ -4,7 +4,13 @@
 
 #include "led_gpio.h"
 
+#include "led_base_general.h"
 
+led_ops gpio_ops = {
+	.on = led_gpio_on,
+	.off = led_gpio_off,
+	.set_brightness = NULL,
+};
 
 void led_gpio_init(led_gpio_t *led_gpio, char *name,GPIO_TypeDef *port, uint32_t pin_num, uint8_t on_state) {
 

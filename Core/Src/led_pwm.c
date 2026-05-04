@@ -3,9 +3,15 @@
 //
 
 #include "led_pwm.h"
-
+#include "led_base_general.h"
 #include "tim.h"
 
+
+led_ops pwm_ops = {
+	.on = NULL,
+	.off = NULL,
+	.set_brightness = led_pwm_set,
+};
 
 void led_pwm_init(led_pwm_t *led_pwm, char *name, TIM_HandleTypeDef *htim, uint32_t channel, uint32_t brightness) {
 	led_base_init(&(led_pwm->base), name, 0);
