@@ -27,7 +27,8 @@
 #include "w25q64jv.h"
 
 #include <stdio.h>
-#include "led.h"
+// #include "led.h"
+#include "led_gpio.h"
 
 /* USER CODE END Includes */
 
@@ -102,12 +103,27 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	led_t led_red,led_green;
-	led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);
-	led_init(&led_green,LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
 
 
-	printf("[GPIO] addr is 11 %x \r\n", &((GPIO_TypeDef *)LED_RED_GPIO_Port)->ODR);\
+
+	led_gpio_t led_red,led_green = { 0 };
+
+	led_gpio_init(&led_red, "led_red", LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+	led_gpio_init(&led_green, "led_green", LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+
+	// led_t led_red,led_green;
+	// led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);
+	// led_init(&led_green,LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
+
+
+	// printf("[GPIO] addr is 11 %x \r\n", &((GPIO_TypeDef *)LED_RED_GPIO_Port)->ODR);
+	printf("led name  %s \r\n", led_base_name(&led_red.base));
+	printf("led name  %s \r\n", led_base_name(&led_green.base));
+
+	printf("led name  %s \r\n", led_base_name(&led_red));
+	printf("led name  %s \r\n", led_base_name(&led_green));
+
+	printf("base %x total %x\r\n", &led_red.base, &led_red);
 	// __containerof()
 
   /* USER CODE END 2 */
@@ -120,11 +136,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	led_on(&led_green);
-  	led_off(&led_red);
+	led_gpio_on(&led_green);
+  	led_gpio_off(&led_red);
     HAL_Delay(1000);
-	led_off(&led_green);
-  	led_on(&led_red);
+	led_gpio_off(&led_green);
+  	led_gpio_on(&led_red);
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */
