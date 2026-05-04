@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -29,7 +30,7 @@
 #include <stdio.h>
 // #include "led.h"
 #include "led_gpio.h"
-
+#include "led_pwm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,6 +80,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	// TIM2_CH2
 
   /* USER CODE END 1 */
 
@@ -102,14 +104,21 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
+	// HAL_TIM_PWM_Init(&htim2);
+	// HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 
 
 	led_gpio_t led_red,led_green = { 0 };
+	led_pwm_t led_pwm,led_pwm2;
 
-	led_gpio_init(&led_red, "led_red", LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+	// led_gpio_init(&led_red, "led_red", LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
 	led_gpio_init(&led_green, "led_green", LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+	// led_pwm_init(&led_pwm, "led_pwm", &htim2, TIM_CHANNEL_2, 50);
+	led_pwm_init(&led_pwm2, "led_pwm2", &htim4, TIM_CHANNEL_1, 10);
 
 	// led_t led_red,led_green;
 	// led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);
@@ -117,13 +126,13 @@ int main(void)
 
 
 	// printf("[GPIO] addr is 11 %x \r\n", &((GPIO_TypeDef *)LED_RED_GPIO_Port)->ODR);
-	printf("led name  %s \r\n", led_base_name(&led_red.base));
+	// printf("led name  %s \r\n", led_base_name(&led_red.base));
 	printf("led name  %s \r\n", led_base_name(&led_green.base));
 
-	printf("led name  %s \r\n", led_base_name(&led_red));
+	// printf("led name  %s \r\n", led_base_name(&led_red));
 	printf("led name  %s \r\n", led_base_name(&led_green));
 
-	printf("base %x total %x\r\n", &led_red.base, &led_red);
+	// printf("base %x total %x\r\n", &led_red.base, &led_red);
 	// __containerof()
 
   /* USER CODE END 2 */
@@ -137,10 +146,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 	led_gpio_on(&led_green);
-  	led_gpio_off(&led_red);
+  	// led_gpio_off(&led_red);
+  	led_pwm_set(&led_pwm2, 10);
     HAL_Delay(1000);
 	led_gpio_off(&led_green);
-  	led_gpio_on(&led_red);
+  	// led_gpio_on(&led_red);
+  	led_pwm_set(&led_pwm2, 100);
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */

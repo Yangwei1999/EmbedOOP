@@ -34,11 +34,10 @@ enable_language(C ASM)
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
         Core/Src/led.c
-        Core/Inc/led.h
         Core/Src/led_base.c
-        Core/Inc/led_base.h
         Core/Src/led_gpio.c
-        Core/Inc/led_gpio.h)
+        Core/Src/led_pwm.c
+        Core/Inc/led_pwm.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
