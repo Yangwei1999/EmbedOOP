@@ -27,6 +27,7 @@
 #include "w25q64jv.h"
 
 #include <stdio.h>
+#include "led.h"
 
 /* USER CODE END Includes */
 
@@ -66,39 +67,6 @@ void SystemClock_Config(void);
 /*Configure GPIO pin Output Level */
 // HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
 
-static void led_red_on(void) {
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
-}
-
-static void led_red_off(void) {
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
-}
-
-/*Configure GPIO pin Output Level */
-// HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
-
-static void led_green_on(void) {
-  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
-}
-
-static void led_green_off(void) {
-  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
-}
-
-typedef struct {
-    GPIO_TypeDef * port_addr;
-    uint32_t pin_num;
-    uint8_t on_state;
-} led_t;
-
-static void led_on(led_t *led) {
-	HAL_GPIO_WritePin(led->port_addr, led->pin_num, led->on_state);
-}
-
-static void led_off(led_t *led) {
-	HAL_GPIO_WritePin((GPIO_TypeDef *)led->port_addr, led->pin_num, 1 - led->on_state);
-}
-
 
 /* USER CODE END 0 */
 
@@ -134,17 +102,13 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+	led_t led_red,led_green;
+	led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);
+	led_init(&led_green,LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
 
-	led_t led_red = {
-		.port_addr = LED_RED_GPIO_Port,
-		.pin_num = LED_RED_Pin,
-		.on_state = GPIO_PIN_RESET
-	};
-	led_t led_green = {
-		.port_addr = LED_GREEN_GPIO_Port,
-		.pin_num = LED_GREEN_Pin,
-		.on_state = GPIO_PIN_RESET
-	};
+
+	printf("[GPIO] addr is 11 %x \r\n", &((GPIO_TypeDef *)LED_RED_GPIO_Port)->ODR);\
+	// __containerof()
 
   /* USER CODE END 2 */
 
