@@ -126,6 +126,8 @@ void on(funcptr func1, funcptr func2) {
 
 更好的写法是，我们定义一个led_ops结构体，里面定义一些方法
 
+```C
+
 /* 3. 函数指针定义（可以用前向声明的类型） */
 typedef void (*led_on_fn)(led_base *led);
 typedef void (*led_off_fn)(led_base *led);
@@ -172,6 +174,8 @@ void led_on(led_base *led)
     基类对象不关注ops如何实现、进一步抽象
     led->ops->on(led);
 }
+```
+
 
 ## 业务层不关注具体硬件信息
 
@@ -193,13 +197,18 @@ void led_on(led_base *led)
 ## 如果现在alarm led 换成pwm灯
 
 仅需要修改一行
+
+```C
 g_led_alram = &led_pwm.base;
 led_pwm_init(&led_pwm, "led_pwm", &htim4, TIM_CHANNEL_1, 10);  // 这里完成硬件绑定
+```
 
 
 ## 如果实现linux中的module_init的，使得上电自动执行操作
 
 原理是把一系列函数地址放在某个固定位置，在初始化函数中遍历执行
+
+```C
 .my_init :
 {
 . = ALIGN(4);
@@ -229,3 +238,4 @@ extern  uint32_t _emytest;
 for (uint32_t i = 0; i <(&_emytest - &_smytest) ; i++) {
     p[i]();
 }
+```
