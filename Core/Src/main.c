@@ -43,6 +43,10 @@
 #define FLASH_TEST_ADDRESS  0x000001F0UL
 #define FLASH_TEST_LENGTH   300U
 
+extern  uint32_t _smytest;
+extern  uint32_t _emytest;
+// uint32_t *startyw = &_smytest_smytest;
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -102,6 +106,17 @@ void led_off(led_base *led) {
 	return;
 }
 
+typedef void (*print_test)(void);
+
+void print_1(void) {
+	printf("asdsad111\r\n");
+}
+
+void print_2(void) {
+	printf("asdsad2222\r\n");
+}
+
+__attribute__((section(".my_init"))) print_test key[2] = {print_1, print_2};
 led_base *g_led_error = NULL;
 led_base *g_led_alram = NULL;
 
@@ -161,6 +176,18 @@ int main(void)
 
 	led_gpio_t *test = __containerof(g_led_alram, led_gpio_t, base);
 	printf(" gpio is %u \r\n", test->pin_num);
+
+	// printf("key is %u \r\n", key[0]);
+	// printf("key is %u \r\n", key[1]);
+	printf("key is %x \r\n", &_smytest);
+	printf("key is %x \r\n", &_emytest);
+	printf("key is %x \r\n", &_emytest - &_smytest);
+	print_test *p = &_smytest;
+
+	for (uint32_t i = 0; i <(&_emytest - &_smytest) ; i++) {
+		// printf("%u \r\n", p[i]);
+		p[i]();
+	}
 
 	// led_t led_red,led_green;
 	// led_init(&led_red,LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET);

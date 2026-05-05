@@ -94,6 +94,20 @@ SECTIONS
     _etext = .;        /* define a global symbols at end of code */
   } >FLASH
 
+/* The program code and other data goes into FLASH */
+.my_init :
+{
+  . = ALIGN(4);
+  _smytest = .;
+/*  *(.my_init)           /* .text sections (code) */*/
+/*  KEEP(*(.my_init))*/
+  KEEP(*(.my_init*))
+/*  *(.my_init*)          /* .text* sections (code) */*/
+
+  . = ALIGN(4);
+  _emytest = .;
+} >FLASH
+
   /* Constant data goes into FLASH */
   .rodata :
   {
